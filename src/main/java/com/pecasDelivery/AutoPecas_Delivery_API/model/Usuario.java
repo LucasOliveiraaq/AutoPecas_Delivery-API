@@ -33,8 +33,8 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(nullable = false, length = 255)
-	private String nomeUsuario; //verificar se não precisa ser unico
+	@Column(nullable = false, unique = true, length = 255)
+	private String nomeUsuario;
 	
 	@Column(nullable = false, unique = true, length = 255)
 	private String email;
