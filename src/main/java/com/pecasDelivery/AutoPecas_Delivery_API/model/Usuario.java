@@ -25,8 +25,8 @@ import lombok.Setter;
 @Table(name = "usuario")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Usuario {
 
 	@Id
@@ -34,7 +34,7 @@ public class Usuario {
 	private Integer id;
 
 	@Column(nullable = false, unique = true, length = 255)
-	private String nomeUsuario;
+	private String login;
 	
 	@Column(nullable = false, unique = true, length = 255)
 	private String email;
@@ -50,4 +50,10 @@ public class Usuario {
 	@Column(nullable = false, updatable = false)
 	@CreationTimestamp
 	private LocalDateTime createdAt;
+	
+	public Usuario(String login, String senha, String email) {
+		this.login = login;
+		this.senha = senha;
+		this.email = email;
+	}
 }
