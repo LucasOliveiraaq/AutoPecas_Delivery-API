@@ -15,6 +15,7 @@ import com.pecasDelivery.AutoPecas_Delivery_API.dto.AuthenticationDTO;
 import com.pecasDelivery.AutoPecas_Delivery_API.dto.RegisterDTO;
 import com.pecasDelivery.AutoPecas_Delivery_API.model.Usuario;
 import com.pecasDelivery.AutoPecas_Delivery_API.repositories.UsuarioRepository;
+import com.pecasDelivery.AutoPecas_Delivery_API.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,36 +23,36 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/usuario/login")
 @RequiredArgsConstructor
 public class UsuarioController {
-	
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
-	@Autowired 
+
+	@Autowired
 	private UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@GetMapping("/test")
 	public String test() {
 		return "Teste bem-sucedido!";
 	}
-	
+
 	@PostMapping
 	public ResponseEntity login(@RequestBody AuthenticationDTO authenticationDTO) {
-		var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.login(), authenticationDTO.senha());
+		var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.login(),
+				authenticationDTO.senha());
 		var auth = this.authenticationManager.authenticate(usernamePassword);
 		return ResponseEntity.ok().build();
 	}
-	
+
 	@PostMapping("/register")
 	public ResponseEntity register(@RequestBody RegisterDTO registerDTO) {
-		if(this.usuarioRepository.findByLogin(registerDTO.login()) != null || 
-		   this.usuarioRepository.findByEmail(registerDTO.email()) != null) {
-			return ResponseEntity.badRequest().body("Login ou e-mail já estão em uso");
+		try {
+			usuarioService.registerNewUser(registerDTO);
+			return ResponseEntity.ok("Usuário registrado com sucesso!");
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		
-		String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.senha());
-		Usuario newUsuario = new Usuario(registerDTO.login(), encryptedPassword, registerDTO.email());
-		this.usuarioRepository.save(newUsuario);
-		
-		return ResponseEntity.ok("Usuário registrado com sucesso!");
 	}
 }

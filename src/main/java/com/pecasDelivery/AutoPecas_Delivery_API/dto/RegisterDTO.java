@@ -1,3 +1,5 @@
 package com.pecasDelivery.AutoPecas_Delivery_API.dto;
 
-public record RegisterDTO(String login, String email, String senha) { }
+import java.util.List;
+
+public record RegisterDTO( String login, String senha, String email, List<String> roles) { }
