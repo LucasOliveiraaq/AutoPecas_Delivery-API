@@ -28,9 +28,6 @@ public class UsuarioController {
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	private UsuarioRepository usuarioRepository;
-
-	@Autowired
 	private UsuarioService usuarioService;
 
 	@GetMapping("/test")
