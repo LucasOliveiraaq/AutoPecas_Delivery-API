@@ -59,11 +59,11 @@ public class UserAuthenticationFilter extends OncePerRequestFilter{
 	}
 	
 	private String recuperarToken(HttpServletRequest request) {
-		String authorizationHeader = request.getHeader("Authorization");
-		if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-			return authorizationHeader.replace("Bearer ", "").trim();
-		}
-		return null;
+	    String authorizationHeader = request.getHeader("Authorization");
+	    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+	        return authorizationHeader.replace("Bearer ", "").trim();
+	    }
+	    return null;
 	}
 
 }

@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import com.pecasDelivery.AutoPecas_Delivery_API.model.Usuario;
 import com.pecasDelivery.AutoPecas_Delivery_API.repositories.UsuarioRepository;
 
+@Service
 public class UserDetailsServiceImpl implements UserDetailsService{
 
 	@Autowired
@@ -18,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	 * Metodo chamado automaticamente pelo spring no processo de autenticação
 	 */
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Usuario usuario = usuarioRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+		Usuario usuario = usuarioRepository.findByLogin(username).orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 		return new UserDetailsImpl(usuario);
 	}
 

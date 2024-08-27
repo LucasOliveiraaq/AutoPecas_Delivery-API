@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.pecasDelivery.AutoPecas_Delivery_API.security.authentication.UserAuthenticationFilter;
 
@@ -34,6 +35,7 @@ public class SecurityConfiguration {
 						.requestMatchers(HttpMethod.POST, "/usuario/login/register").permitAll()
 						.requestMatchers(HttpMethod.POST, "/produto").hasRole("ADMIN")
 						.anyRequest().authenticated())
+				.addFilterBefore(UserAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 
