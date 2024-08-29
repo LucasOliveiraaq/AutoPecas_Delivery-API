@@ -25,14 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioController {
 
 	@Autowired
-	private AuthenticationManager authenticationManager;
-
-	@Autowired
 	private UsuarioService usuarioService;
 	
-	@Autowired
-	private JwtTokenService jwtTokenService;
-
 	@GetMapping("/test")
 	public String test() {
 		return "Teste bem-sucedido!";
@@ -40,12 +34,8 @@ public class UsuarioController {
 
 	@PostMapping()
 	public ResponseEntity login(@RequestBody AuthenticationDTO authenticationDTO) {
-		var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDTO.login(), authenticationDTO.senha());
 		try {
-			var auth = this.authenticationManager.authenticate(usernamePassword);
-			var token = jwtTokenService.generateToken((UserDetailsImpl) auth.getPrincipal());
-			return ResponseEntity.ok(new LoginResponseDTO(token));
-			
+			return ResponseEntity.ok(usuarioService.login(authenticationDTO));			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
