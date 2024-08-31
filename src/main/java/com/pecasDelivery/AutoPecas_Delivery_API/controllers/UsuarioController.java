@@ -3,7 +3,9 @@ package com.pecasDelivery.AutoPecas_Delivery_API.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/usuario/login")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class UsuarioController {
 
 	@Autowired
@@ -35,7 +38,9 @@ public class UsuarioController {
 	@PostMapping()
 	public ResponseEntity login(@RequestBody AuthenticationDTO authenticationDTO) {
 		try {
-			return ResponseEntity.ok(usuarioService.login(authenticationDTO));			
+			return ResponseEntity.ok(usuarioService.login(authenticationDTO));
+		} catch (BadCredentialsException e) {
+			throw new BadCredentialsException("Usuario ou senha inválidos.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

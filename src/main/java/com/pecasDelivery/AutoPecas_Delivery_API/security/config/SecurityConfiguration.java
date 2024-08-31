@@ -20,33 +20,36 @@ import com.pecasDelivery.AutoPecas_Delivery_API.security.authentication.UserAuth
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-	@Autowired
-	private UserAuthenticationFilter UserAuthenticationFilter;
+    @Autowired
+    private UserAuthenticationFilter userAuthenticationFilter;
 
-	public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = { "/users/login", "/users" };
+    public static final String[] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
+        "/usuario/login",
+        "/usuario/register"
+    };
 
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		return httpSecurity.csrf(csrf -> csrf.disable())
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(authorize -> 
-						authorize
-						.requestMatchers(HttpMethod.POST, "/usuario/login").permitAll()
-						.requestMatchers(HttpMethod.POST, "/usuario/login/register").permitAll()
-						.requestMatchers(HttpMethod.POST, "/produto").hasRole("ADMIN")
-						.anyRequest().authenticated())
-				.addFilterBefore(UserAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-				.build();
-	}
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+            .cors(cors -> cors.configure(httpSecurity))
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
+                .requestMatchers(HttpMethod.POST, ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll() 
+                .anyRequest().authenticated()) 
+            .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
+    }
 
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-			throws Exception {
-		return authenticationConfiguration.getAuthenticationManager();
-	}
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
