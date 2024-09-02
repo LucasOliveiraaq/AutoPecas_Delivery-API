@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import com.pecasDelivery.AutoPecas_Delivery_API.dto.AuthenticationDTO;
 import com.pecasDelivery.AutoPecas_Delivery_API.dto.LoginResponseDTO;
 import com.pecasDelivery.AutoPecas_Delivery_API.dto.RegisterDTO;
+import com.pecasDelivery.AutoPecas_Delivery_API.exception.EmailAlreadyInUseException;
+import com.pecasDelivery.AutoPecas_Delivery_API.exception.InvalidRoleException;
+import com.pecasDelivery.AutoPecas_Delivery_API.exception.RoleNotFoundException;
 import com.pecasDelivery.AutoPecas_Delivery_API.model.Role;
 import com.pecasDelivery.AutoPecas_Delivery_API.model.RoleName;
 import com.pecasDelivery.AutoPecas_Delivery_API.model.Usuario;
@@ -39,7 +42,7 @@ public class UsuarioService {
 	public Usuario registerNewUser(RegisterDTO registerDTO) throws Exception {
 		if (usuarioRepository.findByLogin(registerDTO.login()).isPresent()
 				|| usuarioRepository.findByEmail(registerDTO.email()).isPresent()) {
-			throw new Exception("Login ou e-mail já estão em uso");
+			throw new EmailAlreadyInUseException("Login ou e-mail já estão em uso");
 		}
 
 		String encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.senha());
@@ -52,10 +55,10 @@ public class UsuarioService {
 			try {
 				RoleName enumRoleName = RoleName.valueOf(roleName);
 				Role role = roleRepository.findByName(enumRoleName)
-						.orElseThrow(() -> new Exception("Role não encontrada: " + roleName));
+						.orElseThrow(() -> new RoleNotFoundException("Role não encontrada: " + roleName));
 				userRoles.add(role);
 			} catch (IllegalArgumentException e) {
-				throw new Exception("Role inválida: " + roleName);
+				throw new InvalidRoleException("Role inválida: " + roleName);
 			}
 		}
 

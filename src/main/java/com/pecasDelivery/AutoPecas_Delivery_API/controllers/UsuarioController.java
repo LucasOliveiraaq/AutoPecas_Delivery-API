@@ -1,10 +1,9 @@
 package com.pecasDelivery.AutoPecas_Delivery_API.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pecasDelivery.AutoPecas_Delivery_API.dto.AuthenticationDTO;
-import com.pecasDelivery.AutoPecas_Delivery_API.dto.LoginResponseDTO;
 import com.pecasDelivery.AutoPecas_Delivery_API.dto.RegisterDTO;
-import com.pecasDelivery.AutoPecas_Delivery_API.security.authentication.JwtTokenService;
-import com.pecasDelivery.AutoPecas_Delivery_API.security.details.UserDetailsImpl;
 import com.pecasDelivery.AutoPecas_Delivery_API.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
@@ -39,9 +35,11 @@ public class UsuarioController {
 	public ResponseEntity login(@RequestBody AuthenticationDTO authenticationDTO) {
 		try {
 			return ResponseEntity.ok(usuarioService.login(authenticationDTO));
-		} catch (BadCredentialsException e) {
-			throw new BadCredentialsException("Usuario ou senha inválidos.");
-		} catch (Exception e) {
+		} 
+//		catch (BadCredentialsException e) {
+//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha inválidos.");
+//		} 
+		catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
