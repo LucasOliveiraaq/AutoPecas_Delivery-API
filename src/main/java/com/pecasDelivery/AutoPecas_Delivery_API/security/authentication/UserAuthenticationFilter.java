@@ -35,7 +35,8 @@ public class UserAuthenticationFilter extends OncePerRequestFilter{
 			String token = recuperarToken(request);
 			if(token != null) {
 				String subject = jwtTokenService.getSubjectFromToken(token);
-				Optional<Usuario> optionalUser = usuarioRepository.findByEmail(subject);
+//				Optional<Usuario> optionalUser = usuarioRepository.findByEmail(subject);
+				Optional<Usuario> optionalUser = usuarioRepository.findByLogin(subject);
 				if(optionalUser.isPresent()) {
 					Usuario user  = optionalUser.get();
 					UserDetailsImpl userDetails = new UserDetailsImpl(user);
@@ -65,5 +66,4 @@ public class UserAuthenticationFilter extends OncePerRequestFilter{
 	    }
 	    return null;
 	}
-
 }
