@@ -10,31 +10,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pecasDelivery.AutoPecas_Delivery_API.dto.MarcaDTO;
-import com.pecasDelivery.AutoPecas_Delivery_API.model.Marca;
-import com.pecasDelivery.AutoPecas_Delivery_API.service.MarcaService;
+import com.pecasDelivery.AutoPecas_Delivery_API.dto.CategoriaDTO;
+import com.pecasDelivery.AutoPecas_Delivery_API.model.Categoria;
+import com.pecasDelivery.AutoPecas_Delivery_API.service.CategoriaService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("produto/marca")
+@RequestMapping("produto/categoria")
 @RequiredArgsConstructor
-public class MarcaController {
+public class CategoriaController {
 
-	@Autowired
-	private MarcaService marcaService;
+	@Autowired 
+	private CategoriaService categoriaService;
 	
 	@PostMapping
-	public ResponseEntity createMarca(@RequestBody MarcaDTO dto) {
+	public ResponseEntity createCategoria(@RequestBody CategoriaDTO categoriaDTO) {
 		try {
-			return ResponseEntity.ok(marcaService.createMarca(dto));
+			return ResponseEntity.ok(categoriaService.createCategoria(categoriaDTO));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 	
 	@GetMapping("/list")
-	public List<Marca> listMarca() {
-		return marcaService.listarMarca();
+	public List<Categoria> listCategorias() {
+		return categoriaService.listarCategorias();
 	}
 }
